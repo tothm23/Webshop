@@ -11,8 +11,8 @@ JAX-RS Web Application with Maven in Netbeans
 # Project Structure
 |Folder or File|Description|
 |--------------|-----------|
-|`src/man/java`|Contains the Java source code for the application|
-|`src/man/resources`|Resource files such as configuration files (**`persistence.xml`**) or database scripts can be stored in this directory|
+|`src/main/java`|Contains the Java source code for the application|
+|`src/main/resources`|Resource files such as configuration files (**`persistence.xml`**) or database scripts can be stored in this directory|
 |`src/main/webapp`|Contains the files and resources of the web application (**`index.html`**)|
 |`src/test/java`|It's used for testing|
 |`pom.xml`|This is a Maven project file that contains the project's configuration and dependencies|
@@ -24,6 +24,9 @@ JAX-RS Web Application with Maven in Netbeans
 |`com.webshop.Exception`|Contains the custom exception classes|
 |`com.webshop.Model`|Entities must be generated here|
 |`com.webshop.Service`|Contains the service classes and methods|
+
+# Import database in XAMPP
+[Import this](./database.sql)
 
 # Create Project
 1. New Project > Java with Maven > Web Application
@@ -104,6 +107,27 @@ Driver Class name: com.mysql.cj.jdbc.Driver
  - Password: password
 6. Test Connection
 7. Review
+
+# Build the Project
+Right Click > Clean and Build
+
+# Deploy the application
+1. Deployments > Upload Deployment
+2. Choose the file > Next > Finish
+
+# Test the Project
+1. Open Postman
+2. Set the method to **POST**
+3. Paste the url: `http://localhost:8080/Webshop-1.0-SNAPSHOT/webresources/user/regisztracio`
+4. Go Body > raw and paste this lines (If you see "Sikertlen regisztráció", change the values!)
+```json
+{
+    "nickname":"John",
+    "email":"john99@gmail.com",
+    "password":"ASDasd123",
+    "isAdmin":false
+}
+```
 
 # Pay attention to these!
 
