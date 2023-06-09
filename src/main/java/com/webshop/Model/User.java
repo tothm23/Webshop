@@ -1,5 +1,6 @@
 package com.webshop.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.webshop.Exception.PasswordException;
 import java.io.Serializable;
 import java.util.Date;
@@ -25,21 +26,22 @@ import javax.validation.constraints.Size;
  *
  * @author tothm23
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "user")
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
     @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.nickname = :nickname"),
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
-    @NamedQuery(name = "User.findByAdmin", query = "SELECT u FROM User u WHERE u.admin = :admin"),
-    @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
-    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
-    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
+    @NamedQuery(name = "User.findByAdmin", query = "SELECT u FROM User u WHERE u.isAdmin = :isAdmin"),
+    @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phoneNum = :phoneNum"),
+    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.fname = :fname"),
+    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lname = :lname"),
     @NamedQuery(name = "User.findByStatus", query = "SELECT u FROM User u WHERE u.status = :status"),
     @NamedQuery(name = "User.findByLastLogin", query = "SELECT u FROM User u WHERE u.lastLogin = :lastLogin"),
-    @NamedQuery(name = "User.findByRegisteredAt", query = "SELECT u FROM User u WHERE u.registeredAt = :registeredAt")})
+    @NamedQuery(name = "User.findByRegisteredAt", query = "SELECT u FROM User u WHERE u.signTime = :signTime")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,8 +51,8 @@ public class User implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Size(max = 100)
-    @Column(name = "username")
-    private String username;
+    @Column(name = "nickname")
+    private String nickname;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 100)
     @Column(name = "email")
@@ -58,28 +60,42 @@ public class User implements Serializable {
     @Size(max = 50)
     @Column(name = "password")
     private String password;
-    @Column(name = "admin")
-    private Boolean admin;
-    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Column(name = "isAdmin")
+    private Boolean isAdmin;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phoneNum/fax format, should be as xxx-xxx-xxxx")//if the field contains phoneNum or fax number consider using this annotation to enforce field validation
     @Size(max = 12)
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "phoneNum")
+    private String phoneNum;
     @Size(max = 50)
-    @Column(name = "firstName")
-    private String firstName;
+    @Column(name = "fname")
+    private String fname;
     @Size(max = 50)
-    @Column(name = "lastName")
-    private String lastName;
+    @Column(name = "lname")
+    private String lname;
     @Column(name = "status")
     private Boolean status;
     @Column(name = "lastLogin")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
-    @Column(name = "registeredAt")
+    @Column(name = "signTime")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date registeredAt;
+    private Date signTime;
 
     public User() {
+        /*
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.Webshop_war_1.0-SNAPSHOTPU");
+        EntityManager em = emf.createEntityManager();
+
+        User user = em.find(User.class, id);
+        this.id = user.getId();
+        this.email = user.getEmail();
+        //this.nickname = user.getNickname();
+
+        // Beállítani az összes többi tulajdonságot ugyan így
+        em.clear();
+        em.close();
+        emf.close();
+         */
     }
 
     public User(Integer id) {
@@ -94,12 +110,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getEmail() {
@@ -118,36 +134,36 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Boolean getAdmin() {
-        return admin;
+    public Boolean getIsAdmin() {
+        return isAdmin;
     }
 
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNum() {
+        return phoneNum;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFname() {
+        return fname;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFname(String fname) {
+        this.fname = fname;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLname() {
+        return lname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLname(String lname) {
+        this.lname = lname;
     }
 
     public Boolean getStatus() {
@@ -166,12 +182,12 @@ public class User implements Serializable {
         this.lastLogin = lastLogin;
     }
 
-    public Date getRegisteredAt() {
-        return registeredAt;
+    public Date getSignTime() {
+        return signTime;
     }
 
-    public void setRegisteredAt(Date registeredAt) {
-        this.registeredAt = registeredAt;
+    public void setSignTime(Date signTime) {
+        this.signTime = signTime;
     }
 
     @Override
@@ -186,7 +202,7 @@ public class User implements Serializable {
         if (!(object instanceof User)) {
             return false;
         }
-        
+
         User other = (User) object;
         return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
@@ -196,28 +212,60 @@ public class User implements Serializable {
         return "com.webshop.User[ id=" + id + " ]";
     }
 
-    public static boolean checkPassword(String pw) throws PasswordException {
-        // 8 karakter
-        if (pw.length() < 8) {
-            throw new PasswordException("A jelszó nem elég hosszú");
-        } // kisbetűs
-        else if (!pw.matches(".[a-z],")) {
-            throw new PasswordException("Csak kisbetűs karakterek vannak!");
-        } // nagybetűs
-        else if (!pw.matches(".[A-z],")) {
-            throw new PasswordException("Csak nagybetűs karakterek vannak!");
-        } // számok
-        else if (!pw.matches(".[0-9],")) {
-            throw new PasswordException("Csak számok vannak!");
-        } // speciális karakterek
-        else if (!pw.matches(".*[!@#$%&*()_+=|<>?{}\\\\[\\\\]~-].*")) {
-            throw new PasswordException("Lenni kell speciális karakternek!");
-        } else {
-            return true;
+//    public static boolean checkName(String name) {
+//        return !name.equalsIgnoreCase("");
+//    }
+    public static boolean checkEmail(String email) {
+        // Az emailcím formailag helyes, gmail domain, és a @ előtt legalább 3 karakteres, érvényes "név" szerepel
+        // Az emailcím nem lehet rövidebb 12 karakternél
+
+//        Követelmény:
+//        - Minimum 12 karakter hosszú
+//        - @ előtt legalább 3 karakter szerepel
+//        - van @ karkater
+        if (email.length() >= 12 && email.contains("@")) {
+            String[] pieces = email.split("@");
+
+            if (pieces[0].length() >= 3 && pieces[1].startsWith("gmail")) {
+                return true;
+            }
         }
+
+        return false;
+
     }
 
-    public static boolean regisztracio(String name, String email, String pw, Boolean admin) {
+    public static boolean checkPassword(String pw) throws PasswordException {
+        // jelszó vizsgálat
+        // Jelszó hossza legalább 8 karakter, van benne 1-1 kis és nagybetű 1 szám, és 1 speciális karakter
+        // + A jelszüban a speciális karakter nem lehet az első és az utolsó helyen
+
+//        // 8 karakter
+//        if (pw.length() < 8) {
+//            throw new PasswordException("A jelszó nem elég hosszú");
+//        } // kisbetűs
+//        else if (!pw.matches(".[a-z],")) {
+//            throw new PasswordException("Csak kisbetűs karakterek vannak!");
+//        } // nagybetűs
+//        else if (!pw.matches(".[A-z],")) {
+//            throw new PasswordException("Csak nagybetűs karakterek vannak!");
+//        } // számok
+//        else if (!pw.matches(".[0-9],")) {
+//            throw new PasswordException("Csak számok vannak!");
+//        } // speciális karakterek
+//        else if (!pw.matches(".*[!@#$%&*()_+=|<>?{}\\\\[\\\\]~-].*")) {
+//            throw new PasswordException("Lenni kell speciális karakternek!");
+//        } else {
+//            return true;
+//        }
+//        Követelmény:
+//        - Minimum 1 nagy betű
+//        - Minimum 1 szám
+//        - Minimum 8 karakter hosszú
+        return pw.matches("^(?=.*[A-Z])(?=.*\\d).{8,}$");
+    }
+
+    public static boolean regisztracio(String name, String email, String pw, Boolean isAdmin) {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.Webshop_war_1.0-SNAPSHOTPU");
         EntityManager em = emf.createEntityManager();
@@ -225,21 +273,55 @@ public class User implements Serializable {
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("regisztracio");
 
-            spq.registerStoredProcedureParameter("usernameIN", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("nicknameIN", String.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("emailIN", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("passwordIN", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("adminIN", Boolean.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("pwIN", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("isAdminIN", Boolean.class, ParameterMode.IN);
 
-            spq.setParameter("usernameIN", name);
+            spq.setParameter("nicknameIN", name);
             spq.setParameter("emailIN", email);
-            spq.setParameter("passwordIN", pw);
-            spq.setParameter("adminIN", admin);
+            spq.setParameter("pwIN", pw);
+            spq.setParameter("isAdminIN", isAdmin);
 
             spq.execute();
             return true;
+
         } catch (Exception e) {
+
             System.err.println(e.getMessage());
             return false;
+
+        } finally {
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+
+    public static User bejelentkezes(String email, String pw) {
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.Webshop_war_1.0-SNAPSHOTPU");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("bejelentkezes");
+
+            spq.registerStoredProcedureParameter("emailIN", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("passwordIN", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("idOUT", Integer.class, ParameterMode.OUT);
+
+            spq.setParameter("emailIN", email);
+            spq.setParameter("passwordIN", pw);
+
+            spq.execute();
+            Integer id = Integer.parseInt(spq.getOutputParameterValue("idOUT").toString());
+            return new User(id);
+        } catch (Exception e) {
+
+            System.err.println(e.getMessage());
+            return new User();
+
+            //Saját exception-t kell írni, hogy a bejelentkezés sikertelen
         } finally {
             em.clear();
             em.close();

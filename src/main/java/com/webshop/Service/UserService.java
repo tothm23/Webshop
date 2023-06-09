@@ -1,7 +1,9 @@
 package com.webshop.Service;
 
+import com.webshop.Config.Token;
 import com.webshop.Exception.PasswordException;
 import com.webshop.Model.User;
+import org.json.JSONObject;
 
 /**
  *
@@ -10,47 +12,31 @@ import com.webshop.Model.User;
 public class UserService {
 
     public static String regisztracio(String name, String email, String pw, Boolean admin) {
-
+        // Logikai validálás
         try {
-            if (!checkEmail(email)) {
-                return "Az email cím nem elég hosszú, a domain-en kívül legalább 3 karaktert kell tartalmaznia!";
-
+            if (!User.checkEmail(email)) {
+                return "Érvénytelen email cím";
             } else if (!User.checkPassword(pw)) {
-                return "Ez soha nem teljesülhet";
-
+                return "Érvénytelen jelszó";
             } else if (User.regisztracio(name, email, pw, admin)) {
                 return "Sikeres regisztráció!";
             } else {
                 return "Sikertelen regisztráció";
             }
-        } catch (PasswordException e) {
-            return e.getMessage();
+        } catch (Exception ex) {
+            return ex.getMessage();
         }
 
     }
 
-    public static boolean checkName(String name) {
-        return !name.equalsIgnoreCase("");
-    }
+    public static JSONObject bejelentkezes(String email, String pw) {
+        User u = User.bejelentkezes(email, pw);
+        //String to ken = Token.createJwt(u);
 
-    public static boolean checkEmail(String email) {
-        // Az emailcím formailag helyes, gmail domain, és a @ előtt legalább 3 karakteres, érvényes "név" szerepel
+        JSONObject obj = new JSONObject();
+        obj.put("user", u.toString());
+        //obj.put("jwt", token);
 
-        if (email.contains("@")) {
-            String[] pieces = email.split("@");
-
-            if (pieces[0].length() >= 3) {
-                if (pieces[1].startsWith("gmail")) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        return false;
-
+        return obj;
     }
 }
