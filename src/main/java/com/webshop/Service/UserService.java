@@ -1,7 +1,6 @@
 package com.webshop.Service;
 
 import com.webshop.Config.Token;
-import com.webshop.Exception.PasswordException;
 import com.webshop.Model.User;
 import org.json.JSONObject;
 
@@ -31,11 +30,12 @@ public class UserService {
 
     public static JSONObject bejelentkezes(String email, String pw) {
         User u = User.bejelentkezes(email, pw);
-        //String to ken = Token.createJwt(u);
+        String token = Token.createJWT(
+                "Test subject",
+                System.currentTimeMillis());
 
         JSONObject obj = new JSONObject();
-        obj.put("user", u.toString());
-        //obj.put("jwt", token);
+        obj.put("jwt", token);
 
         return obj;
     }

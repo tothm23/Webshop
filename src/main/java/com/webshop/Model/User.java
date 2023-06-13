@@ -82,20 +82,34 @@ public class User implements Serializable {
     private Date signTime;
 
     public User() {
-        /*
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.Webshop_war_1.0-SNAPSHOTPU");
-        EntityManager em = emf.createEntityManager();
 
-        User user = em.find(User.class, id);
-        this.id = user.getId();
-        this.email = user.getEmail();
-        //this.nickname = user.getNickname();
-
-        // Beállítani az összes többi tulajdonságot ugyan így
-        em.clear();
-        em.close();
-        emf.close();
-         */
+//        170 MB-os lag file-t generál tele hibával
+//                
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.Webshop_war_1.0-SNAPSHOTPU");
+//        EntityManager em = emf.createEntityManager();
+//
+//        try {
+//            User user = em.find(User.class, id);
+//            
+//            this.id = user.getId();
+//            this.nickname = user.getNickname();
+//            this.email = user.getEmail();
+//            this.password = user.getPassword();
+//            this.isAdmin = user.getIsAdmin();
+//            this.phoneNum = user.getPhoneNum();
+//            this.fname = user.getFname();
+//            this.lname = user.getLname();
+//            this.status = user.getStatus();
+//            this.lastLogin = user.getLastLogin();
+//            this.signTime = user.getSignTime();
+//
+//        } catch (Exception e) {
+//            System.err.println(e.getMessage());
+//        } finally {
+//            em.clear();
+//            em.close();
+//            emf.close();
+//        }
     }
 
     public User(Integer id) {
@@ -314,8 +328,8 @@ public class User implements Serializable {
             spq.setParameter("passwordIN", pw);
 
             spq.execute();
-            Integer id = Integer.parseInt(spq.getOutputParameterValue("idOUT").toString());
-            return new User(id);
+//            Integer id = Integer.parseInt(spq.getOutputParameterValue("idOUT").toString());
+            return new User(1);
         } catch (Exception e) {
 
             System.err.println(e.getMessage());
