@@ -30,12 +30,10 @@ public class UserService {
 
     public static JSONObject bejelentkezes(String email, String pw) {
         User u = User.bejelentkezes(email, pw);
-        String token = Token.createJWT(
-                "Test subject",
-                System.currentTimeMillis());
+        String token = Token.createJwt(u, 3600000);
 
         JSONObject obj = new JSONObject();
-        obj.put("jwt", token);
+        obj.put("token", token);
 
         return obj;
     }
