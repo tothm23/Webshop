@@ -328,8 +328,8 @@ public class User implements Serializable {
             spq.setParameter("passwordIN", pw);
 
             spq.execute();
-//            Integer id = Integer.parseInt(spq.getOutputParameterValue("idOUT").toString());
-            return new User(1);
+            Integer id = Integer.parseInt(spq.getOutputParameterValue("idOUT").toString());
+            return new User(id);
         } catch (Exception e) {
 
             System.err.println(e.getMessage());
